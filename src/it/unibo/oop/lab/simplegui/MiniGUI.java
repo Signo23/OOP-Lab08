@@ -48,6 +48,7 @@ public class MiniGUI {
          *  Ex 01.02
          */
         final TextField text = new TextField();
+        text.setText("RANDOM INT: ");
         canvas.add(text, BorderLayout.NORTH);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +58,8 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
+              final int result = rng.nextInt();
+              text.setText("RANDOM INT: " + Integer.toString(result));
             }
         });
     }
