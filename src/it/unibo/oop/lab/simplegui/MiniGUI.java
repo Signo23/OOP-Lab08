@@ -5,6 +5,7 @@ package it.unibo.oop.lab.simplegui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,13 +37,18 @@ public class MiniGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Print a random number on standard output");
-    /**
-     * 
-     */
+        /**
+        *  Ex 01.01
+        */
         final JPanel boh = new JPanel();
         boh.setLayout(new BoxLayout(boh, BoxLayout.LINE_AXIS));
         canvas.add(boh, BorderLayout.CENTER);
         boh.add(write);
+        /**
+         *  Ex 01.02
+         */
+        final TextField text = new TextField();
+        canvas.add(text, BorderLayout.NORTH);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
