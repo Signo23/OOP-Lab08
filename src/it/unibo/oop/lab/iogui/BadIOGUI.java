@@ -5,8 +5,12 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.BoxLayout;
@@ -75,7 +79,15 @@ public class BadIOGUI {
 
           @Override
           public void actionPerformed(final ActionEvent e) {
-            System.out.println("Prova");
+            try {
+              final List<String> lines = Files.readAllLines(new File(PATH).toPath());
+              for (final String str : lines) {
+                System.out.println(str);
+              }
+            } catch (IOException e1) {
+              JOptionPane.showMessageDialog(frame, e1, "Error!", JOptionPane.ERROR_MESSAGE);
+              e1.printStackTrace();
+            }
           }
         });
     }
