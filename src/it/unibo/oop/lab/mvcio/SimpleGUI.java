@@ -1,9 +1,17 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 /**
  * A very simple program using a graphical interface.
@@ -11,7 +19,8 @@ import javax.swing.JFrame;
  */
 public final class SimpleGUI {
 
-    private final JFrame frame = new JFrame();
+    private final JFrame frame = new JFrame("SimpleGUI");
+    private final Controller controller = new Controller();
 
     /*
      * Once the Controller is done, implement this class in such a way that:
@@ -37,6 +46,26 @@ public final class SimpleGUI {
      * builds a new {@link SimpleGUI}.
      */
     public SimpleGUI() {
+      final JPanel panel = new JPanel(new BorderLayout());
+      final JTextArea textArea = new JTextArea();
+      final JButton button = new JButton("Save");
+      panel.add(textArea, BorderLayout.CENTER);
+      panel.add(button, BorderLayout.SOUTH);
+      button.setBorder(new TitledBorder("SimpleButton"));
+      textArea.setBorder(new TitledBorder("SimpleTextArea"));
+      frame.add(panel);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      button.addActionListener(new ActionListener() {
+
+        public void actionPerformed(final ActionEvent e) {
+          try {
+            controller.save(textArea.getText());
+            textArea.setText("");
+          } catch (IOException e1) {
+            e1.printStackTrace();
+          }
+        }
+      });
         /*
          * Make the frame half the resolution of the screen. This very method is
          * enough for a single screen setup. In case of multiple monitors, the
@@ -58,5 +87,16 @@ public final class SimpleGUI {
          */
         frame.setLocationByPlatform(true);
     }
-
+    /**
+     * 
+     */
+    public void display() {
+      frame.setVisible(true);
+    }
+    /**
+     * @param str
+     */
+    public static void main(final String[] str) {
+      new SimpleGUI().display();
+    }
 }
