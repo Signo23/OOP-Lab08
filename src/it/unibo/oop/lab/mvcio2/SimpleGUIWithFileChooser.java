@@ -1,5 +1,23 @@
 package it.unibo.oop.lab.mvcio2;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
+
+import it.unibo.oop.lab.mvcio.Controller;
+
 /**
  * A very simple program using a graphical interface.
  * 
@@ -7,7 +25,6 @@ package it.unibo.oop.lab.mvcio2;
 public final class SimpleGUIWithFileChooser {
 
     /*
-     * TODO: Starting from the application in mvcio:
      * 
      * 1) Add a JTextField and a button "Browse..." on the upper part of the
      * graphical interface.
@@ -30,6 +47,87 @@ public final class SimpleGUIWithFileChooser {
      * must reflect such change. Suggestion: do not force the controller to
      * update the UI: in this example the UI knows when should be updated, so
      * try to keep things separated.
-     */
+     */private final JFrame frame = new JFrame("SimpleGUI");
+     private final Controller controller = new Controller();
+
+     public SimpleGUIWithFileChooser() {
+       final JPanel panel = new JPanel(new BorderLayout());
+       final JTextArea textArea = new JTextArea();
+       final JButton button = new JButton("Save");
+       final JPanel northPanel = new JPanel(new BorderLayout());
+       final JButton browse = new JButton("Browse...");
+       final JTextField textField = new JTextField();
+       textField.setEditable(false);
+       textField.setText(controller.getFilePath());
+       northPanel.add(textField, BorderLayout.CENTER);
+       northPanel.add(browse, BorderLayout.LINE_END);
+       panel.add(northPanel, BorderLayout.NORTH);
+       panel.add(textArea, BorderLayout.CENTER);
+       panel.add(button, BorderLayout.SOUTH);
+       textArea.setBorder(new TitledBorder("SimpleTextArea"));
+       frame.add(panel);
+       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       button.addActionListener(new ActionListener() {
+         public void actionPerformed(final ActionEvent e) {
+           try {
+             controller.save(textArea.getText());
+             textArea.setText("");
+           } catch (IOException e1) {
+             e1.printStackTrace();
+           }
+         }
+       });
+       browse.addActionListener(new ActionListener() {
+
+        public void actionPerformed(final ActionEvent e) {
+          final JFileChooser fileChooser = new JFileChooser();
+          fileChooser.setSelectedFile(controller.getFile());
+          final int result = fileChooser.showSaveDialog(panel);
+          switch (result) {
+          case JFileChooser.APPROVE_OPTION:
+            controller.setFile(fileChooser.getSelectedFile());
+            textField.setText(controller.getFilePath());
+            break;
+          case JFileChooser.CANCEL_OPTION:
+            break;
+          default:
+            JOptionPane.showMessageDialog(frame, result, "Error!", JOptionPane.ERROR_MESSAGE);
+            break;
+          }
+        }
+       });
+         /*
+          * Make the frame half the resolution of the screen. This very method is
+          * enough for a single screen setup. In case of multiple monitors, the
+          * primary is selected.
+          * 
+          * In order to deal coherently with multimonitor setups, other
+          * facilities exist (see the Java documentation about this issue). It is
+          * MUCH better than manually specify the size of a window in pixel: it
+          * takes into account the current resolution.
+          */
+         final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+         final int sw = (int) screen.getWidth();
+         final int sh = (int) screen.getHeight();
+         frame.setSize(sw / 2, sh / 2);
+         /*
+          * Instead of appearing at (0,0), upper left corner of the screen, this
+          * flag makes the OS window manager take care of the default positioning
+          * on screen. Results may vary, but it is generally the best choice.
+          */
+         frame.setLocationByPlatform(true);
+     }
+     /**
+      * 
+      */
+     public void display() {
+       frame.setVisible(true);
+     }
+     /**
+      * @param str
+      */
+     public static void main(final String[] str) {
+       new SimpleGUIWithFileChooser().display();
+     }
 
 }
